@@ -4,20 +4,20 @@ open System.Reflection
 
 [<assembly: AssemblyTitleAttribute("Giraffe.JsonTherapy")>]
 [<assembly: AssemblyProductAttribute("Giraffe.JsonTherapy")>]
-[<assembly: AssemblyVersionAttribute("1.0.0")>]
+[<assembly: AssemblyVersionAttribute("1.1.0")>]
 [<assembly: AssemblyMetadataAttribute("ReleaseDate","2019-01-28T00:00:00.0000000")>]
-[<assembly: AssemblyFileVersionAttribute("1.0.0")>]
-[<assembly: AssemblyInformationalVersionAttribute("1.0.0")>]
+[<assembly: AssemblyFileVersionAttribute("1.1.0")>]
+[<assembly: AssemblyInformationalVersionAttribute("1.1.0")>]
 [<assembly: AssemblyMetadataAttribute("ReleaseChannel","release")>]
-[<assembly: AssemblyMetadataAttribute("GitHash","a15800150f610417b610f813da9c48371b1ce414")>]
+[<assembly: AssemblyMetadataAttribute("GitHash","fb0971d773553805bcbe60f1e6f92826751818e6")>]
 do ()
 
 module internal AssemblyVersionInformation =
     let [<Literal>] AssemblyTitle = "Giraffe.JsonTherapy"
     let [<Literal>] AssemblyProduct = "Giraffe.JsonTherapy"
-    let [<Literal>] AssemblyVersion = "1.0.0"
+    let [<Literal>] AssemblyVersion = "1.1.0"
     let [<Literal>] AssemblyMetadata_ReleaseDate = "2019-01-28T00:00:00.0000000"
-    let [<Literal>] AssemblyFileVersion = "1.0.0"
-    let [<Literal>] AssemblyInformationalVersion = "1.0.0"
+    let [<Literal>] AssemblyFileVersion = "1.1.0"
+    let [<Literal>] AssemblyInformationalVersion = "1.1.0"
     let [<Literal>] AssemblyMetadata_ReleaseChannel = "release"
-    let [<Literal>] AssemblyMetadata_GitHash = "a15800150f610417b610f813da9c48371b1ce414"
+    let [<Literal>] AssemblyMetadata_GitHash = "fb0971d773553805bcbe60f1e6f92826751818e6"

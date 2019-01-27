@@ -89,7 +89,7 @@ POST
   >=> route "/player"
   >=> Json.parts("player.id", "player.name", "role", 
     fun id name role -> 
-      text (sprintf "Player(%s, %d) is a %s"))
+      text (sprintf "Player(%s, %d) is a %s" name id role))
 ```
 then call the end point:
 ```bash
