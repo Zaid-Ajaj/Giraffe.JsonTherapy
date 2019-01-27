@@ -30,7 +30,7 @@ The library has two functions:
 ```
 where both `description` and `complete` are *optional*. You want to update a an existing Todo so you can read the *values* directly as follows:
 ```fs
-let webApp
+let webApp =
   PUT 
     >=> route "/todo/update" 
     >=> Json.parts("id", "description", "complete", 
@@ -54,6 +54,9 @@ Because `desc` and `complete` has been infered (from usage) as optionals, then t
 
 ```bash
 PUT /todo/update
+
+{ }
+# 400 Bad Request { "message": "cannot find value at path 'id' in the JSON" }
 
 { id: 1 }
 # 400 Bad Request "Nothing to update" 
