@@ -220,6 +220,21 @@ let tests =
 
         withClientFor webApp (post "/extract" "[{ \"value\": \"hello\", \"id\": 1 }, { \"value\": \"there\", \"id\": 2 }]" >> readTextEqual "pass")
 
+    testCase "Reading floats works" <| fun _ ->
+        let webApp =
+          POST
+          >=> route "/extract"
+          >=> Json.manyParts("price",
+            fun prices ->
+                prices
+                |> List.sum
+                |> sprintf "%.2f"
+                |> text)
+
+        withClientFor webApp <| fun client ->
+            client
+            |> post "/extract" "[{\"price\":1.5 },{\"price\":3.5}]"
+            |> readTextEqual "5.00"
 
     testCase "Null string in JSON becomes None" <| fun _ ->
       let webApp = 
