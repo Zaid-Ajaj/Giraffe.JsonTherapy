@@ -4,7 +4,7 @@ clitool dotnet-mono 0.5.4
 clitool dotnet-sourcelink 2.8.0
 nuget Argu
 nuget FSharp.Core
-nuget Expecto 
+nuget Expecto
 nuget Serilog
 nuget Serilog.Sinks.Console
 nuget Serilog.Sinks.TestCorrelator
@@ -14,7 +14,7 @@ nuget Microsoft.AspNetCore.Server.Kestrel
 nuget Microsoft.AspNetCore.Hosting
 nuget Microsoft.AspNetCore.TestHost
 nuget Microsoft.AspNetCore.Http
-nuget Fable.Remoting.Json
+nuget Newtonsoft.Json
 
 group Build
   framework: >= net45

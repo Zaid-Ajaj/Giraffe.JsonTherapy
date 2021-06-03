@@ -14,36 +14,36 @@ open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.DependencyInjection
 open System.Net
 
-let updateDescription (id: int) (desc: string) = 
+let updateDescription (id: int) (desc: string) =
   text "Updating just the description"
 
-let updateComplete (id: int) (complete: bool) = 
-  text "updating todo complete" 
+let updateComplete (id: int) (complete: bool) =
+  text "updating todo complete"
 
-let updateDescAndComplete (id: int) (desc: string) (complete: bool) = 
+let updateDescAndComplete (id: int) (desc: string) (complete: bool) =
   text "updating description and complete"
 
 let testWebApp : HttpHandler =
   choose [
     GET >=> route "/" >=> text "Index"
-    PUT 
-      >=> route "/todo/update" 
-      >=> Json.parts("id", "description", "complete", 
-        // id: int -> required 
+    PUT
+      >=> route "/todo/update"
+      >=> Json.parts("id", "description", "complete",
+        // id: int -> required
         // desc: string option -> optional
         // complete: bool option -> optional
         fun id desc complete  ->
-          match desc, complete with 
+          match desc, complete with
           // input JSON => { id, desc, complete }
-          | Some desc, Some complete -> updateDescAndComplete id desc complete 
+          | Some desc, Some complete -> updateDescAndComplete id desc complete
           // input JSON => { id, complete }
           | None, Some complete -> updateComplete id complete
           // input JSON => { id, desc }
-          | Some desc, None -> updateDescription id desc 
+          | Some desc, None -> updateDescription id desc
           // input JSON => { id }
           | None, None -> setStatusCode 400 >=> text "Nothing to update"
       )
- 
+
     setStatusCode 404 >=> text "Not Found"
   ]
 
@@ -66,12 +66,12 @@ let createHost() =
         .ConfigureServices(Action<IServiceCollection> configureServices)
 
 let withClientFor (webApp: HttpHandler) (map: HttpClient -> unit) =
-    let host = 
+    let host =
       WebHostBuilder()
         .UseContentRoot(Directory.GetCurrentDirectory())
         .Configure(Action<IApplicationBuilder> (fun app -> app.UseGiraffe webApp))
         .ConfigureServices(Action<IServiceCollection> configureServices)
-    
+
     use server = new TestServer(host)
     use client = server.CreateClient()
     map client
@@ -86,12 +86,12 @@ let httpGet (path : string) (client : HttpClient) =
     |> client.GetAsync
     |> runTask
 
-let put (path: string) (content: string) (client: HttpClient) = 
+let put (path: string) (content: string) (client: HttpClient) =
   let httpContent = new StringContent(content)
   client.PutAsync(path, httpContent)
   |> runTask
 
-let post (path: string) (content: string) (client: HttpClient) = 
+let post (path: string) (content: string) (client: HttpClient) =
   let httpContent = new StringContent(content)
   client.PostAsync(path, httpContent)
   |> runTask
@@ -117,18 +117,18 @@ let readTextEqual content (response : HttpResponseMessage) =
 
 [<Tests>]
 let tests =
-  testList "Giraffe.QueryReader" [
+  testList "Giraffe.JsonTherapy" [
     testCase "Nested properties can be extracted from JSON" <| fun _ ->
       let inputJson = """ { "player": { "id": 1, "name": "john" } }  """
       let playerId = "player.id"
       let playerName = "player.name"
       let json = Extensions.parse inputJson
-      match Extensions.readPath (Extensions.getJPath playerId) json with 
-      | Some (JNumber 1.0) -> pass() 
+      match Extensions.readPath (Extensions.getJPath playerId) json with
+      | Some (JNumber 1.0) -> pass()
       | otherwise -> fail()
 
-      match Extensions.readPath (Extensions.getJPath playerName) json with 
-      | Some (JString "john") -> pass() 
+      match Extensions.readPath (Extensions.getJPath playerName) json with
+      | Some (JString "john") -> pass()
       | otherwise -> fail()
 
     testCase "Root path / returns 'Index' as text" <| fun _ ->
@@ -153,33 +153,33 @@ let tests =
       use server = new TestServer(createHost())
       use client = server.CreateClient()
 
-      client 
+      client
       |> put "/todo/update" "{ \"id\": 1 }"
       |> isStatus HttpStatusCode.BadRequest
       |> readTextEqual "Nothing to update"
 
-      client 
+      client
       |> put "/todo/update" "{ \"id\": 1, \"description\": \"description\" }"
       |> ensureSuccess
-      |> readTextEqual "Updating just the description" 
+      |> readTextEqual "Updating just the description"
 
-      client 
+      client
       |> put "/todo/update" "{ \"id\": 1, \"complete\": true }"
       |> ensureSuccess
-      |> readTextEqual "updating todo complete" 
+      |> readTextEqual "updating todo complete"
 
-      client 
+      client
       |> put "/todo/update" "{ \"id\": 1, \"complete\": true, \"description\": \"description\" }"
-      |> ensureSuccess 
+      |> ensureSuccess
       |> readTextEqual "updating description and complete"
 
     testCase "Nested properties can be extracted" <| fun _ ->
-      let webApp = 
+      let webApp =
         POST
-        >=> route "/extract" 
-        >=> Json.parts("player.id", "player.name", "role", 
-          fun id name role -> text (sprintf "Player(%d, %s) is a %s" id name role)) 
-       
+        >=> route "/extract"
+        >=> Json.parts("player.id", "player.name", "role",
+          fun id name role -> text (sprintf "Player(%d, %s) is a %s" id name role))
+
       withClientFor webApp <| fun client ->
         let inputJson = """ { "player": { "id": 1, "name": "john" }, "role": "goal keeper" }  """
         client
@@ -237,10 +237,10 @@ let tests =
             |> readTextEqual "5.00"
 
     testCase "Null string in JSON becomes None" <| fun _ ->
-      let webApp = 
-        POST 
+      let webApp =
+        POST
         >=> route "/extract"
-        >=> Json.parts("name", 
+        >=> Json.parts("name",
               function
               | None -> text "Name was null or missing"
               | Some name -> text name)
